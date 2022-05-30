@@ -77,7 +77,7 @@ namespace praktikum_w14
                 labelWorstDisc.Text = dtTopWorst.Rows[0][0].ToString() + " ," + dtTopWorst.Rows[0][2].ToString() + " Yellow Card and " + dtTopWorst.Rows[0][1].ToString() + " Red Card";
                 labelTopScorer.Text = dtTopScore.Rows[0][0].ToString() + " " + dtTopScore.Rows[0][1].ToString() + " (" + dtTopScore.Rows[0][2].ToString() + " )";
 
-                sqlQuery = "SELECT date_format(m.match_date, '%d/%c/%Y') as'match_date' , if(m.team_home = '" + simpan + "','HOME',if(team_away = '" + simpan + "','AWAY',0)) as 'Home/Away',if(m.team_home = '" + simpan + "',m.team_away,if(m.team_away = '" + simpan + "',m.team_home,0)) as 'lawan' ,concat(m.goal_home,'-',m.goal_away) as 'score' FROM `match` m where m.team_home = '" + simpan + "' or m.team_away = '" + simpan + "' order by m.match_date desc LIMIT 5 ;";
+                sqlQuery = "select m.match_date ,date_format(m.match_date, \'%d/%c/%Y') as 'Match_Date', 'HOME' as 'home/away', concat('vs ',t.team_name) as 'lawan', concat(goal_home, ' - ', goal_away) as 'Score' from `match` m, team t where team_home = '" + simpan + "' and m.team_away = t.team_id union select m.match_date ,date_format(m.match_date, \'%d/%c/%Y') as 'match date', 'AWAY' as 'Home/Away', concat('vs ',t.team_name) as 'Lawan', concat(goal_home, ' - ', goal_away) as 'Score' from `match` m, team t where team_away = '" + simpan + "' and m.team_home = t.team_id order by 1 desc limit 5;";
                 sqlCommand = new MySqlCommand(sqlQuery, sqlConnect);
                 sqlAdapter = new MySqlDataAdapter(sqlCommand);
                 sqlAdapter.Fill(dtgridMatch);
